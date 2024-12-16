@@ -55,7 +55,7 @@ class TorApp(QWidget):
         # Açıklama kısmı (alt kısmına yerleştirilecek)
         self.description_label = QLabel(
             "Golge Linux, internet trafiğinizi Tor ağı üzerinden yönlendirerek anonimlik sağlar. Bu araç, tüm internet bağlantılarınızı Tor ağından yapmaya zorlar, böylece çevrimiçi gizliliğiniz maksimum düzeye çıkar. Ancak, unutmayın ki Tor Browser kullanırken JavaScript'i kapalı tutmanız önemlidir. Aksi takdirde, kimlik bilgileriniz sızabilir ve çevrimiçi izlenmeniz mümkün olabilir.\n\n"
-            "Tor ağı ile güvendesiniz, ancak anonimliğinizi kötü amaçlarla kullanmak, yasa dışı faaliyetlere katılmak veya zarar vermek kesinlikle kabul edilemez. Gölge Linux, sadece güvenliğinizi sağlamak için tasarlanmış bir araçtır ve doğru amaçlarla kullanılmalıdır. Lütfen güvenliği ve etik kuralları göz önünde bulundurarak kullanın.\n\n"
+            "Tor ağı ile güvendesiniz, ancak anonimliğinizi kötü amaçlarla kullanmak, yasa dışı faaliyetlere katılmak veya zarar vermek kesinlikle kabul edilemez. Golge Linux , sadece güvenliğinizi sağlamak için tasarlanmış bir işletim sistemidir ve doğru amaçlarla kullanılmalıdır. Lütfen güvenliği ve etik kuralları göz önünde bulundurarak kullanın.\n\n"
             "Unutmayın: Tor ve anonimlik araçlarını sadece yasal ve etik amaçlarla kullanın."
         )
         self.description_label.setStyleSheet(""" 
