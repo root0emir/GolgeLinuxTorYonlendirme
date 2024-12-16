@@ -38,7 +38,7 @@ class TorApp(QWidget):
         # Pencere başlığı ve boyutu
         self.setWindowTitle("Golge Linux Tor Yönlendirme Aracı")
         self.setGeometry(100, 100, 1200, 800)  # Geniş pencere
-        self.setMinimumSize(1000, 600)
+        self.setMinimumSize(1500, 850)
 
         # Arka plan rengini koyu mor yapma
         self.setAutoFillBackground(True)
@@ -48,7 +48,7 @@ class TorApp(QWidget):
 
         # Logo ekleme (orta yerleştirilecek)
         self.logo_label = QLabel(self)
-        self.logo_pixmap = QPixmap("Tor/logo.jpg")  # Burada logo.png, çalıştırdığınız dizinde yer almalı
+        self.logo_pixmap = QPixmap("Tor/logo.png")  # Burada logo.png, çalıştırdığınız dizinde yer almalı
         self.logo_label.setPixmap(self.logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignCenter)
 
