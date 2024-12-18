@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QTextEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QTextEdit, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtCore import Qt
 from stem import Signal
@@ -30,6 +30,19 @@ def route_traffic_through_tor():
         return "Tüm trafik Tor ağına yönlendirildi ve DNS sızıntıları engellendi."
     except Exception as e:
         return f"İnternet trafiği yönlendirilemedi: {e}"
+
+def check_tor_connection():
+    # Burada Tor'a bağlantıyı kontrol etme işlemi yapılabilir
+    # Bu örnekte, bağlantıyı kontrol etmek için bir yer işareti kullandım
+    try:
+        with Controller.from_port(port=9051) as controller:
+            controller.authenticate(password="your_tor_password")
+            status = controller.get_info("status/names")
+            if "ONION" in status:
+                return True
+            return False
+    except Exception as e:
+        return False
 
 class TorApp(QWidget):
     def __init__(self):
@@ -71,8 +84,8 @@ class TorApp(QWidget):
         # Tor başlatma ve trafik yönlendirme butonu
         self.start_button = QPushButton("Tor Başlat ve Trafiği Yönlendir", self)
         self.start_button.setStyleSheet("""
-            font-size: 20px;
-            padding: 20px;
+            font-size: 16px;
+            padding: 10px;
             background-color: #4CAF50;
             color: white;
             border-radius: 12px;
@@ -82,6 +95,21 @@ class TorApp(QWidget):
         """)
         self.start_button.setCursor(Qt.PointingHandCursor)
         self.start_button.clicked.connect(self.start_and_route)
+
+        # Tor bağlantısı kontrol butonu
+        self.check_button = QPushButton("Tor Bağlantısını Kontrol Et", self)
+        self.check_button.setStyleSheet("""
+            font-size: 16px;
+            padding: 10px;
+            background-color: #FF5722;
+            color: white;
+            border-radius: 12px;
+            border: 2px solid #F44336;
+            text-align: center;
+            transition: all 0.3s ease;
+        """)
+        self.check_button.setCursor(Qt.PointingHandCursor)
+        self.check_button.clicked.connect(self.check_tor_connection_status)
 
         # Sonuçları gösterecek etiket
         self.result_label = QLabel("", self)
@@ -110,10 +138,14 @@ class TorApp(QWidget):
         self.log_text_edit.setPlaceholderText("Bağlantı logları burada gösterilecek...")
 
         # Yatay düzen
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.start_button)
+        button_layout.addWidget(self.check_button)
+
         layout = QVBoxLayout()
         layout.addWidget(self.logo_label)  # Logo merkezi
         layout.addWidget(self.description_label)  # Açıklama alt kısımda
-        layout.addWidget(self.start_button)  # Buton
+        layout.addLayout(button_layout)  # Butonlar yan yana
         layout.addWidget(self.log_text_edit)  # Logları gösteren alan
         layout.addWidget(self.result_label)  # Sonuçlar
         layout.addWidget(self.info_label)  # Bilgi mesajı
@@ -138,13 +170,25 @@ class TorApp(QWidget):
             self.log_text_edit.append(f"Hata: {str(e)}")
             self.result_label.setText(f"Hata oluştu: {str(e)}")
 
+    def check_tor_connection_status(self):
+        self.log_text_edit.clear()  # Önceki logları temizle
+        self.log_text_edit.append("Tor bağlantısı kontrol ediliyor...")
+
+        if check_tor_connection():
+            self.result_label.setText("<b>Tor ağına bağlandınız!</b>")
+        else:
+            self.result_label.setText("<b>Tor ağına bağlanılamadı.</b>")
+
     def on_tor_status(self, event):
         """Tor ağının durumunu dinleyerek, bağlantı durumu değiştikçe bilgi gösterir."""
         if event.state == "ONION":
-            self.log_text_edit.append("Tor bağlantısı başarıyla kurulmuştur.")
+            self.log_text_edit.append("Tor ağına başarıyla bağlanıldı.")
+        elif event.state == "CONNECTED":
+            self.log_text_edit.append("Tor ağına bağlanılıyor...")
         else:
-            self.log_text_edit.append(f"Durum: {event.state}")
+            self.log_text_edit.append("Tor ağına bağlanırken bir sorun oluştu.")
 
+# Ana uygulama başlatma
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = TorApp()
